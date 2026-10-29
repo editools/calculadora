@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Adiantamento · editools</title>
+<meta name="description" content="Feito com IA.">
+<meta property="og:title" content="Adiantamento · editools">
+<meta property="og:description" content="Feito com IA.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2323408e%22/%3E%3Cg%20transform%3D%22translate%28-5%2C0%29%22%3E%3Cpath%20d%3D%22M33%2014%20A11%2011%200%200%200%2033%2036%20Z%22%20fill%3D%22%23ffffff%22/%3E%3Crect%20x%3D%2232%22%20y%3D%2214%22%20width%3D%225%22%20height%3D%2236%22%20rx%3D%221%22%20fill%3D%22%23ffffff%22/%3E%3Crect%20x%3D%2241%22%20y%3D%2214%22%20width%3D%225%22%20height%3D%2236%22%20rx%3D%221%22%20fill%3D%22%23ffffff%22/%3E%3Crect%20x%3D%2232%22%20y%3D%2214%22%20width%3D%2218%22%20height%3D%225%22%20rx%3D%221%22%20fill%3D%22%23ffffff%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2248%22%20r%3D%225%22%20fill%3D%22%23f2b63d%22/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: uma coluna estreita, formulário em cima, resultado grande embaixo, como uma ficha de contrato */
+:root {
+  --bg: #fbfbf9;
+  --surface: #ffffff;
+  --fg: #1d2230;
+  --muted: #646b7c;
+  --line: #dde0e6;
+  --accent: #23408e;
+  --accent-soft: #e9edf8;
+  --font-display: "Literata", Georgia, "Times New Roman", serif;
+  --font-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171f; --surface: #1c202b; --fg: #e7e9ee; --muted: #9aa1b2;
+    --line: #2d3342; --accent: #8fa8f0; --accent-soft: #232b44; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14171f; --surface: #1c202b; --fg: #e7e9ee; --muted: #9aa1b2;
+  --line: #2d3342; --accent: #8fa8f0; --accent-soft: #232b44; color-scheme: dark;
+}
+body {
+  margin: 0;
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 56px;
+}
+main { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1 { font-family: var(--font-display); font-weight: 600; font-size: 1.9rem; line-height: 1.15; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); margin: 6px 0 0; max-width: 60ch; }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+input, select {
+  font: inherit; font-variant-numeric: tabular-nums; color: var(--fg); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; width: 100%; box-sizing: border-box;
+}
+input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.money { display: flex; gap: 8px; }
+.money select { width: auto; flex: 0 0 auto; }
+.money input { flex: 1 1 auto; min-width: 0; }
+.result { border-top: 2px solid var(--fg); padding-top: 20px; display: flex; flex-direction: column; gap: 4px; }
+.result .kicker { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.big { font-family: var(--font-display); font-weight: 600; font-size: clamp(3rem, 12vw, 4.5rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.big small { font-size: 0.32em; font-weight: 400; color: var(--fg); margin-left: 6px; }
+.breakdown { margin: 14px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 20px; font-variant-numeric: tabular-nums; }
+.breakdown dt { color: var(--muted); }
+.breakdown dd { margin: 0; text-align: right; }
+.rates { background: var(--accent-soft); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.rates h2 { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin: 0; color: var(--fg); }
+.rates .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rates p { margin: 0; font-size: 0.85rem; color: var(--muted); }
+.fxbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+.fxbar p { flex: 1 1 220px; }
+button { font: inherit; font-size: 0.85rem; font-weight: 600; color: var(--accent); background: var(--surface); border: 1px solid var(--accent); border-radius: 6px; padding: 7px 12px; cursor: pointer; }
+button:hover { background: var(--accent); color: var(--surface); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:disabled { opacity: 0.5; cursor: default; }
+footer { color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--line); padding-top: 14px; }
+.err { color: var(--muted); font-style: italic; }
+@media (max-width: 440px) { form, .rates .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<main>
+  <header>
+    <h1>Quantos exemplares estou adiantando?</h1>
+    <p class="lede">Informe o preço de capa, a taxa de royalties e o valor do adiantamento. A conta mostra quantos exemplares precisam ser vendidos para os royalties cobrirem o adiantamento.</p>
+  </header>
+
+  <form id="calc" autocomplete="off">
+    <div class="field">
+      <label for="preco">Preço de capa estimado (R$)</label>
+      <input id="preco" type="text" inputmode="decimal" value="79,90">
+    </div>
+    <div class="field">
+      <label for="royalty">Royalties</label>
+      <select id="royalty">
+        <option value="10">10% · autor brasileiro</option>
+        <option value="8" selected>8% · autor estrangeiro</option>
+      </select>
+    </div>
+    <div class="field full">
+      <label for="adiant">Valor do adiantamento</label>
+      <div class="money">
+        <select id="moeda" aria-label="Moeda">
+          <option value="BRL">R$ Real</option>
+          <option value="USD">US$ Dólar</option>
+          <option value="EUR" selected>€ Euro</option>
+        </select>
+        <input id="adiant" type="text" inputmode="decimal" value="5.000">
+      </div>
+    </div>
+  </form>
+
+  <section class="result" aria-live="polite">
+    <span class="kicker">Exemplares para cobrir o adiantamento</span>
+    <div class="big" id="out">—</div>
+    <dl class="breakdown">
+      <dt>Adiantamento em reais</dt><dd id="o-brl">—</dd>
+      <dt>Royalty por exemplar</dt><dd id="o-roy">—</dd>
+      <dt>Câmbio usado</dt><dd id="o-fx">—</dd>
+    </dl>
+  </section>
+
+  <section class="rates">
+    <h2>Câmbio</h2>
+    <div class="row">
+      <div class="field">
+        <label for="usd">1 US$ em R$</label>
+        <input id="usd" type="text" inputmode="decimal" value="5,3485">
+      </div>
+      <div class="field">
+        <label for="eur">1 € em R$</label>
+        <input id="eur" type="text" inputmode="decimal" value="5,9661">
+      </div>
+    </div>
+    <div class="fxbar"><p id="fxnote">Buscando a cotação do momento…</p><button type="button" id="refresh">Atualizar cotação</button></div>
+  </section>
+
+  <footer>editools · Feito com IA.</footer>
+</main>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+  const num = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 0 });
+  const fx4 = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+
+  // aceita "5.000", "5000", "79,90", "79.90"
+  function parse(s) {
+    s = String(s).trim().replace(/[^\d.,]/g, "");
+    if (!s) return NaN;
+    if (s.includes(",")) s = s.replace(/\./g, "").replace(",", ".");
+    else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, "");
+    return parseFloat(s);
+  }
+
+  function calc() {
+    const preco = parse($("preco").value);
+    const pct = Number($("royalty").value) / 100;
+    const moeda = $("moeda").value;
+    const adiant = parse($("adiant").value);
+    const rate = moeda === "BRL" ? 1 : parse($(moeda === "USD" ? "usd" : "eur").value);
+
+    if (!(preco > 0 && adiant > 0 && rate > 0)) {
+      $("out").innerHTML = '<span class="err" style="font-size:1rem">Preencha preço, adiantamento e câmbio</span>';
+      ["o-brl", "o-roy", "o-fx"].forEach((k) => ($(k).textContent = "—"));
+      return;
+    }
+    const adiantBRL = adiant * rate;
+    const porExemplar = preco * pct;
+    const exemplares = Math.ceil(adiantBRL / porExemplar);
+
+    $("out").innerHTML = num.format(exemplares) + "<small>exemplares</small>";
+    $("o-brl").textContent = brl.format(adiantBRL);
+    $("o-roy").textContent = brl.format(porExemplar) + " (" + (pct * 100) + "% de " + brl.format(preco) + ")";
+    $("o-fx").textContent = moeda === "BRL" ? "não se aplica" : (moeda === "USD" ? "US$ 1 = R$ " : "€ 1 = R$ ") + fx4.format(rate);
+  }
+
+  // ---- câmbio ao vivo ----
+  function setRates(usd, eur, note) {
+    $("usd").value = fx4.format(usd);
+    $("eur").value = fx4.format(eur);
+    $("fxnote").textContent = note;
+    calc();
+  }
+
+  async function fromAwesome() {
+    const r = await fetch("https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL", { cache: "no-store" });
+    if (!r.ok) throw new Error("awesome " + r.status);
+    const j = await r.json();
+    const usd = parseFloat(j.USDBRL.bid), eur = parseFloat(j.EURBRL.bid);
+    if (!(usd > 0 && eur > 0)) throw new Error("awesome vazio");
+    const d = new Date(Number(j.USDBRL.timestamp) * 1000);
+    const quando = d.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+    return { usd, eur, note: "Cotação comercial de " + quando + " (AwesomeAPI). Você pode corrigir à mão." };
+  }
+
+  async function fromFrankfurter() {
+    const [a, b] = await Promise.all([
+      fetch("https://api.frankfurter.app/latest?from=USD&to=BRL").then((r) => r.json()),
+      fetch("https://api.frankfurter.app/latest?from=EUR&to=BRL").then((r) => r.json()),
+    ]);
+    const usd = a.rates.BRL, eur = b.rates.BRL;
+    if (!(usd > 0 && eur > 0)) throw new Error("frankfurter vazio");
+    const dia = a.date.split("-").reverse().join("/");
+    return { usd, eur, note: "Cotação de referência do Banco Central Europeu, " + dia + ". Você pode corrigir à mão." };
+  }
+
+  async function loadRates() {
+    const btn = $("refresh");
+    btn.disabled = true;
+    $("fxnote").textContent = "Buscando a cotação do momento…";
+    for (const fonte of [fromAwesome, fromFrankfurter]) {
+      try {
+        const res = await fonte();
+        setRates(res.usd, res.eur, res.note);
+        btn.disabled = false;
+        return;
+      } catch (e) { /* tenta a próxima fonte */ }
+    }
+    $("fxnote").textContent = "Não consegui buscar a cotação agora. Usando o fechamento de 28/10/2026; corrija à mão se precisar.";
+    btn.disabled = false;
+    calc();
+  }
+
+  ["preco", "royalty", "moeda", "adiant", "usd", "eur"].forEach((id) => {
+    $(id).addEventListener("input", calc);
+    $(id).addEventListener("change", calc);
+  });
+  $("calc").addEventListener("submit", (e) => e.preventDefault());
+  $("refresh").addEventListener("click", loadRates);
+  calc();
+  loadRates();
+})();
+</script>
+</body>
+</html>
